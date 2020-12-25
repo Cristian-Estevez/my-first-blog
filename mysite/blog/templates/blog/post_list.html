@@ -2,10 +2,23 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Aprendiendo Web</title>
 </head>
 <body>
-    <p><strong>Hola Pili, esta es una página de Internet que acabo de crear</strong></p>
+    <div>
+        <h1><a href='/'> Blog Cristian</a></h1>
+    </div>
+
+    <div>
+
+        {% for post in posts %}
+            <p>Published: {{ post.published_date }}</p>
+            <h2><a href=''>{{ post.title }}</a></h2>
+            <p>Author: {{ post.author }}</p>
+            <p>{{ post.text }}</p>
+        {% endfor %}
+    </div>
+    <p><strong></strong></p>
 
 </body>
 </html>
