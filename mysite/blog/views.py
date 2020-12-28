@@ -3,6 +3,7 @@ from .models import Post
 from django.utils import timezone
 from .forms import PostForm
 from django.shortcuts import redirect
+from django.contrib.auth.decorators import login_required
 
 
 # Create your views here.
@@ -29,7 +30,6 @@ def post_new(request):
         if form.is_valid():
             post = form.save(commit=False)
             post.author = request.user
-            post.published_date = timezone.now()
             post.save()
 
             return redirect('post_detail', pk=post.pk)
@@ -47,7 +47,6 @@ def post_edit(request, pk):
         if form.is_valid():
             post = form.save(commit=False)
             post.author = request.user
-            post.published_date = timezone.now()
             post.save()
 
             return redirect('post_detail', pk = post.pk)
@@ -59,3 +58,20 @@ def post_edit(request, pk):
 
 
     return render(request, 'blog/post_edit.html', {})
+
+
+def post_draft_list(request):
+
+    posts = Post.objects.filter(published_date__isnull=True).order_by('created_date')
+    return render(request, 'blog/post_draft_list.html', {'posts': posts})
+
+
+def post_publish(request, pk):
+    post = get_object_or_404(Post, pk=pk)
+    post.publish()
+    return redirect('post_detail', pk=pk)
+    
+def post_remove(request, pk):
+    post = get_object_or_404(Post, pk=pk)
+    post.delete()
+    return redirect('post_list')
